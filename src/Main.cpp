@@ -47,6 +47,19 @@ static void DARE_WPIMath(benchmark::State& state) {
 }
 BENCHMARK(DARE_WPIMath);
 
+static void DARE_WPIMath_Internal(benchmark::State& state) {
+  Eigen::Matrix<double, 5, 5> A;
+  Eigen::Matrix<double, 5, 2> B;
+  Eigen::Matrix<double, 5, 5> Q;
+  Eigen::Matrix<double, 2, 2> R;
+  InitArgs(A, B, Q, R);
+
+  for (auto _ : state) {
+    frc::internal::DARE(A, B, Q, R);
+  }
+}
+BENCHMARK(DARE_WPIMath_Internal);
+
 static void DARE_SLICOT(benchmark::State& state) {
   Eigen::Matrix<double, 5, 5> A;
   Eigen::Matrix<double, 5, 2> B;
