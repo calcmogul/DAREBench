@@ -1,0 +1,24 @@
+cppHeaderFileInclude {
+  \.h$
+  \.hpp$
+  \.inc$
+}
+
+cppSrcFileInclude {
+  \.cc$
+  \.cpp$
+}
+
+modifiableFileExclude {
+  src/drake/
+  src/slicot/
+}
+
+licenseUpdateExclude {
+  src/drake/
+  src/slicot/*.f
+}
+
+includeOtherLibs {
+  ^fmt/
+}
