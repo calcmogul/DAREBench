@@ -1,5 +1,6 @@
 // Copyright (c) Tyler Veness
 
+#include <Eigen/Core>
 #include <benchmark/benchmark.h>
 
 #include "drake/math/discrete_algebraic_riccati_equation.h"
