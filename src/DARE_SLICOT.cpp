@@ -1,0 +1,19 @@
+// Copyright (c) Tyler Veness
+
+#include <Eigen/Core>
+#include <benchmark/benchmark.h>
+
+#include "InitArgs.h"
+#include "slicot/DARE.h"
+
+void DARE_SLICOT(benchmark::State& state) {
+  Eigen::Matrix<double, 5, 5> A;
+  Eigen::Matrix<double, 5, 2> B;
+  Eigen::Matrix<double, 5, 5> Q;
+  Eigen::Matrix<double, 2, 2> R;
+  InitArgs(A, B, Q, R);
+
+  for (auto _ : state) {
+    slicot::DARE<5, 2>(A, B, Q, R);
+  }
+}
