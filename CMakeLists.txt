@@ -27,7 +27,7 @@ endif()
 
 file(GLOB_RECURSE cpp_src src/*.cpp src/*.cc)
 set_property(SOURCE ${cpp_src} PROPERTY COMPILE_FLAGS
-  "-Wno-array-bounds -Wno-class-memaccess -Wno-maybe-uninitialized -Wno-stringop-overflow")
+  "-Wno-array-bounds -Wno-class-memaccess -Wno-dangling-reference -Wno-maybe-uninitialized -Wno-stringop-overflow")
 
 file(GLOB_RECURSE fortran_src src/*.f)
 set_property(SOURCE ${fortran_src} PROPERTY COMPILE_FLAGS
