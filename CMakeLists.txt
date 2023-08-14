@@ -65,8 +65,18 @@ endif()
 target_link_libraries(DAREBench PRIVATE Eigen3::Eigen)
 
 # lapack dependency
-include(FindLAPACK)
-target_link_libraries(DAREBench PRIVATE LAPACK::LAPACK)
+if (CMAKE_CROSSCOMPILING AND "${TOOLCHAIN_TRIPLE}" STREQUAL "arm-nilrt-linux-gnueabi")
+  add_library(blas_athena SHARED IMPORTED)
+  set_target_properties(blas_athena PROPERTIES IMPORTED_LOCATION
+    ${CMAKE_CURRENT_SOURCE_DIR}/${TOOLCHAIN_TRIPLE}/lib/libblas.so.3)
+  add_library(lapack_athena SHARED IMPORTED)
+  set_target_properties(lapack_athena PROPERTIES IMPORTED_LOCATION
+    ${CMAKE_CURRENT_SOURCE_DIR}/${TOOLCHAIN_TRIPLE}/lib/liblapack.so.3)
+  target_link_libraries(DAREBench PRIVATE blas_athena lapack_athena)
+else()
+  include(FindLAPACK)
+  target_link_libraries(DAREBench PRIVATE LAPACK::LAPACK)
+endif()
 
 # fmt dependency
 if (NOT USE_SYSTEM_FMT)
@@ -88,6 +98,9 @@ if (NOT USE_SYSTEM_BENCHMARK)
     benchmark
     GIT_REPOSITORY https://github.com/google/benchmark.git
     GIT_TAG        v1.8.2
+    PATCH_COMMAND  git apply
+                   ${CMAKE_CURRENT_SOURCE_DIR}/benchmark-athena-cpuinfo.patch
+    UPDATE_DISCONNECTED TRUE
   )
   FetchContent_MakeAvailable(benchmark)
 else()

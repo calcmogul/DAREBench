@@ -1,0 +1,13 @@
+diff --git a/src/sysinfo.cc b/src/sysinfo.cc
+index 4578cb0..857d766 100644
+--- a/src/sysinfo.cc
++++ b/src/sysinfo.cc
+@@ -413,6 +413,8 @@ std::vector<CPUInfo::CacheInfo> GetCacheSizes() {
+   return GetCacheSizesQNX();
+ #elif defined(BENCHMARK_OS_QURT)
+   return std::vector<CPUInfo::CacheInfo>();
++#elif defined(__FRC_ROBORIO__)
++  return std::vector<CPUInfo::CacheInfo>();
+ #else
+   return GetCacheSizesFromKVFS();
+ #endif
