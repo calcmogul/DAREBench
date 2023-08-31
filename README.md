@@ -24,22 +24,22 @@ Ran via `./build/DAREBench --benchmark_time_unit=us`.
 
 ```
 Running ./build/DAREBench
-Run on (8 X 3595.49 MHz CPU s)
+Run on (8 X 3599.99 MHz CPU s)
 CPU Caches:
   L1 Data 32 KiB (x4)
   L1 Instruction 32 KiB (x4)
   L2 Unified 256 KiB (x4)
   L3 Unified 6144 KiB (x1)
-Load Average: 1.59, 4.28, 3.08
+Load Average: 4.34, 2.23, 1.39
 -------------------------------------------------------------------------------
 Benchmark                                     Time             CPU   Iterations
 -------------------------------------------------------------------------------
-DARE_WPIMath_Dynamic                       28.2 us         28.1 us        24704
-DARE_WPIMath_NoPrecondChecks_Dynamic       21.3 us         21.1 us        33349
-DARE_WPIMath_Static                        13.1 us         13.1 us        52985
-DARE_WPIMath_NoPrecondChecks_Static        8.78 us         8.77 us        79851
-DARE_SLICOT                                41.4 us         41.3 us        16967
-DARE_Drake                                 95.6 us         95.3 us         7597
+DARE_WPIMath_Dynamic                       28.1 us         28.1 us        25090
+DARE_WPIMath_NoPrecondChecks_Dynamic       21.1 us         21.0 us        33278
+DARE_WPIMath_Static                        13.1 us         13.1 us        53207
+DARE_WPIMath_NoPrecondChecks_Static        9.02 us         9.01 us        77794
+DARE_SLICOT                                41.8 us         41.8 us        16256
+DARE_Drake                                 28.5 us         28.4 us        24502
 ```
 
 ### roboRIO
