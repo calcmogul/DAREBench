@@ -16,12 +16,12 @@ cmake_policy(SET CMP0097 NEW)
 
 set(CMAKE_COLOR_DIAGNOSTICS ON)
 
-project(DAREBench CXX Fortran)
-
 # Set default build type to release
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
 endif()
+
+project(DAREBench CXX Fortran)
 
 # Generate compile_commands.json by default
 if(NOT CMAKE_EXPORT_COMPILE_COMMANDS)
