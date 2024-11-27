@@ -18,7 +18,7 @@ cmake --build build
 
 ## Results
 
-### x86-64 desktop
+### x86-64 desktop (AMD Ryzen 7840U)
 
 Ran via `./build/DAREBench --benchmark_time_unit=us`.
 
@@ -40,6 +40,31 @@ DARE_WPIMath_Static                        13.1 us         13.1 us        53207
 DARE_WPIMath_NoPrecondChecks_Static        9.02 us         9.01 us        77794
 DARE_SLICOT                                41.8 us         41.8 us        16256
 DARE_Drake                                 28.5 us         28.4 us        24502
+```
+
+### Raspberry Pi 5
+
+Ran via `./build/DAREBench --benchmark_time_unit=us`.
+
+```
+Running ./build/DAREBench
+Run on (4 X 2400 MHz CPU s)
+CPU Caches:
+  L1 Data 64 KiB (x4)
+  L1 Instruction 64 KiB (x4)
+  L2 Unified 512 KiB (x4)
+  L3 Unified 2048 KiB (x1)
+Load Average: 0.47, 0.72, 0.45
+***WARNING*** CPU scaling is enabled, the benchmark real time measurements may be noisy and will incur extra overhead.
+-------------------------------------------------------------------------------
+Benchmark                                     Time             CPU   Iterations
+-------------------------------------------------------------------------------
+DARE_WPIMath_Dynamic                       34.4 us         34.4 us        20315
+DARE_WPIMath_NoPrecondChecks_Dynamic       21.7 us         21.7 us        32266
+DARE_WPIMath_Static                        15.2 us         15.2 us        45878
+DARE_WPIMath_NoPrecondChecks_Static        7.84 us         7.84 us        89316
+DARE_SLICOT                                79.4 us         79.4 us         8789
+DARE_Drake                                 34.9 us         34.9 us        20074
 ```
 
 ### roboRIO
