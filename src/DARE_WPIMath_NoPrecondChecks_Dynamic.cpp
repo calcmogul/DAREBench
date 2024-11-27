@@ -14,7 +14,6 @@ void DARE_WPIMath_NoPrecondChecks_Dynamic(benchmark::State& state) {
   InitArgs(A, B, Q, R);
 
   for (auto _ : state) {
-    frc::detail::DARE<Eigen::Dynamic, Eigen::Dynamic>(
-        A, B, Q, Eigen::LLT<Eigen::MatrixXd>{R});
+    frc::DARE<Eigen::Dynamic, Eigen::Dynamic>(A, B, Q, R, false);
   }
 }

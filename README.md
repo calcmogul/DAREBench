@@ -18,28 +18,28 @@ cmake --build build
 
 ## Results
 
-### x86-64 desktop (AMD Ryzen 7840U)
+### Linux x86-64 desktop (AMD Ryzen 7840U)
 
 Ran via `./build/DAREBench --benchmark_time_unit=us`.
 
 ```
 Running ./build/DAREBench
-Run on (8 X 3599.99 MHz CPU s)
+Run on (16 X 3253.98 MHz CPU s)
 CPU Caches:
-  L1 Data 32 KiB (x4)
-  L1 Instruction 32 KiB (x4)
-  L2 Unified 256 KiB (x4)
-  L3 Unified 6144 KiB (x1)
-Load Average: 4.34, 2.23, 1.39
+  L1 Data 32 KiB (x8)
+  L1 Instruction 32 KiB (x8)
+  L2 Unified 1024 KiB (x8)
+  L3 Unified 16384 KiB (x1)
+Load Average: 0.42, 0.52, 0.51
 -------------------------------------------------------------------------------
 Benchmark                                     Time             CPU   Iterations
 -------------------------------------------------------------------------------
-DARE_WPIMath_Dynamic                       28.1 us         28.1 us        25090
-DARE_WPIMath_NoPrecondChecks_Dynamic       21.1 us         21.0 us        33278
-DARE_WPIMath_Static                        13.1 us         13.1 us        53207
-DARE_WPIMath_NoPrecondChecks_Static        9.02 us         9.01 us        77794
-DARE_SLICOT                                41.8 us         41.8 us        16256
-DARE_Drake                                 28.5 us         28.4 us        24502
+DARE_WPIMath_Dynamic                       16.2 us         16.2 us        44050
+DARE_WPIMath_NoPrecondChecks_Dynamic       11.6 us         11.6 us        57903
+DARE_WPIMath_Static                        8.49 us         8.48 us        79163
+DARE_WPIMath_NoPrecondChecks_Static        5.80 us         5.80 us       119024
+DARE_SLICOT                                21.7 us         21.6 us        31424
+DARE_Drake                                 16.3 us         16.3 us        42643
 ```
 
 ### Raspberry Pi 5

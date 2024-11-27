@@ -14,6 +14,6 @@ void DARE_WPIMath_NoPrecondChecks_Static(benchmark::State& state) {
   InitArgs(A, B, Q, R);
 
   for (auto _ : state) {
-    frc::detail::DARE<5, 2>(A, B, Q, R.llt());
+    frc::DARE<5, 2>(A, B, Q, R, false);
   }
 }
