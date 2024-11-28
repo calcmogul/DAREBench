@@ -1,0 +1,63 @@
+name: Build
+
+on: [pull_request, push]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows x86_64
+            os: windows-2022
+            container:
+            cmake-args:
+          - name: Linux x86_64
+            os: ubuntu-24.04
+            container:
+            cmake-args:
+          - name: macOS arm64
+            os: macOS-14
+            container:
+            cmake-args:
+          - name: roboRIO
+            os: ubuntu-24.04
+            container: wpilib/roborio-cross-ubuntu:2024-22.04
+            cmake-args: --toolchain /usr/local/toolchain-config.cmake
+
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install gfortran (macOS arm64)
+        uses: fortran-lang/setup-fortran@v1
+        with:
+          compiler: gcc
+          version: 14
+        if: matrix.name == 'macOS arm64'
+
+      - name: Install LAPACK (Linux x86_64)
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install libblas-dev liblapack-dev
+        if: matrix.name == 'Linux x86_64'
+
+      - name: Install LAPACK (macOS arm64)
+        run: brew install openblas lapack
+        if: matrix.name == 'macOS arm64'
+
+      - run: cmake -B build -S . ${{ matrix.cmake-args }}
+      - run: cmake --build build --config RelWithDebInfo --parallel 4
+      - run: cmake --install build --config RelWithDebInfo --prefix pkg
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: pkg
