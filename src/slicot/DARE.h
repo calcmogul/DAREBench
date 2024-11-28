@@ -4,9 +4,9 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <string>
 
 #include <Eigen/Core>
-#include <fmt/format.h>
 
 extern "C" {
 
@@ -163,7 +163,7 @@ Eigen::Matrix<double, States, States> DARE(
           &INFO, 1, 1, 1, 1, 1, 1);
 
   if (INFO < 0) {
-    throw std::runtime_error(fmt::format("DARE failed: INFO = {}", INFO));
+    throw std::runtime_error("DARE failed: INFO = " + std::to_string(INFO));
   }
 
   return X;

@@ -59,7 +59,6 @@ include(FetchContent)
 
 # Options for using a package manager (e.g., vcpkg) for certain dependencies
 option(USE_SYSTEM_EIGEN "Use system eigen" OFF)
-option(USE_SYSTEM_FMT "Use system fmt" OFF)
 option(USE_SYSTEM_BENCHMARK "Use system benchmark" OFF)
 
 # Eigen dependency
@@ -99,19 +98,6 @@ else()
     include(FindLAPACK)
     target_link_libraries(DAREBench PRIVATE LAPACK::LAPACK)
 endif()
-
-# fmt dependency
-if(NOT USE_SYSTEM_FMT)
-    fetchcontent_declare(
-        fmt
-        GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-        GIT_TAG 10.1.1
-    )
-    fetchcontent_makeavailable(fmt)
-else()
-    find_package(fmt CONFIG REQUIRED)
-endif()
-target_link_libraries(DAREBench PRIVATE fmt::fmt)
 
 # benchmark dependency
 option(BENCHMARK_ENABLE_TESTING "Enable testing of the benchmark library." OFF)
