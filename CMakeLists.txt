@@ -114,7 +114,7 @@ endif()
 target_link_libraries(DAREBench PRIVATE fmt::fmt)
 
 # benchmark dependency
-option(BENCHMARK_DOWNLOAD_DEPENDENCIES "Download benchmark dependencies" ON)
+option(BENCHMARK_ENABLE_TESTING "Enable testing of the benchmark library." OFF)
 if(NOT USE_SYSTEM_BENCHMARK)
     fetchcontent_declare(
         benchmark
