@@ -1,7 +1,5 @@
 cppHeaderFileInclude {
   \.h$
-  \.hpp$
-  \.inc$
 }
 
 cppSrcFileInclude {
@@ -10,6 +8,7 @@ cppSrcFileInclude {
 }
 
 modifiableFileExclude {
+  arm-nilrt-linux-gnueabi/
   src/drake/
   src/slicot/
 }
@@ -22,5 +21,4 @@ licenseUpdateExclude {
 includeOtherLibs {
   ^Eigen/
   ^benchmark/
-  ^fmt/
 }

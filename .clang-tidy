@@ -45,6 +45,7 @@ Checks:
   -clang-diagnostic-#warnings,
   -clang-diagnostic-pedantic,
   clang-analyzer-*,
+  -clang-analyzer-deadcode.DeadStores,
   cppcoreguidelines-slicing,
   google-build-namespaces,
   google-explicit-constructor,
