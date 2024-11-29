@@ -8,12 +8,81 @@
 
 #include <Eigen/Cholesky>
 #include <Eigen/Core>
+#include <Eigen/Eigenvalues>
 #include <Eigen/LU>
+#include <Eigen/QR>
 #include <wpi/expected>
 
-#include "frc/StateSpaceUtil.h"
-
 namespace frc {
+
+/**
+ * Returns true if (A, B) is a stabilizable pair.
+ *
+ * (A, B) is stabilizable if and only if the uncontrollable eigenvalues of A, if
+ * any, have absolute values less than one, where an eigenvalue is
+ * uncontrollable if rank([λI - A, B]) < n where n is the number of states.
+ *
+ * @tparam States Number of states.
+ * @tparam Inputs Number of inputs.
+ * @param A System matrix.
+ * @param B Input matrix.
+ */
+template <int States, int Inputs>
+bool IsStabilizable(const Eigen::Matrix<double, States, States>& A,
+                    const Eigen::Matrix<double, States, Inputs>& B) {
+  Eigen::EigenSolver<Eigen::Matrix<double, States, States>> es{A, false};
+
+  for (int i = 0; i < A.rows(); ++i) {
+    if (std::norm(es.eigenvalues()[i]) < 1) {
+      continue;
+    }
+
+    if constexpr (States != Eigen::Dynamic && Inputs != Eigen::Dynamic) {
+      Eigen::Matrix<std::complex<double>, States, States + Inputs> E;
+      E << es.eigenvalues()[i] * Eigen::Matrix<std::complex<double>, States,
+                                               States>::Identity() -
+               A,
+          B;
+
+      Eigen::ColPivHouseholderQR<
+          Eigen::Matrix<std::complex<double>, States, States + Inputs>>
+          qr{E};
+      if (qr.rank() < States) {
+        return false;
+      }
+    } else {
+      Eigen::MatrixXcd E{A.rows(), A.rows() + B.cols()};
+      E << es.eigenvalues()[i] *
+                   Eigen::MatrixXcd::Identity(A.rows(), A.rows()) -
+               A,
+          B;
+
+      Eigen::ColPivHouseholderQR<Eigen::MatrixXcd> qr{E};
+      if (qr.rank() < A.rows()) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+/**
+ * Returns true if (A, C) is a detectable pair.
+ *
+ * (A, C) is detectable if and only if the unobservable eigenvalues of A, if
+ * any, have absolute values less than one, where an eigenvalue is unobservable
+ * if rank([λI - A; C]) < n where n is the number of states.
+ *
+ * @tparam States Number of states.
+ * @tparam Outputs Number of outputs.
+ * @param A System matrix.
+ * @param C Output matrix.
+ */
+template <int States, int Outputs>
+bool IsDetectable(const Eigen::Matrix<double, States, States>& A,
+                  const Eigen::Matrix<double, Outputs, States>& C) {
+  return IsStabilizable<States, Outputs>(A.transpose(), C.transpose());
+}
 
 /**
  * Errors the DARE solver can encounter.
@@ -54,96 +123,6 @@ constexpr std::string_view to_string(const DAREError& error) {
 
   return "";
 }
-
-namespace detail {
-
-/**
- * Computes the unique stabilizing solution X to the discrete-time algebraic
- * Riccati equation:
- *
- *   AᵀXA − X − AᵀXB(BᵀXB + R)⁻¹BᵀXA + Q = 0
- *
- * This internal function skips expensive precondition checks for increased
- * performance. The solver may hang if any of the following occur:
- * <ul>
- *   <li>Q isn't symmetric positive semidefinite</li>
- *   <li>R isn't symmetric positive definite</li>
- *   <li>The (A, B) pair isn't stabilizable</li>
- *   <li>The (A, C) pair where Q = CᵀC isn't detectable</li>
- * </ul>
- * Only use this function if you're sure the preconditions are met.
- *
- * @tparam States Number of states.
- * @tparam Inputs Number of inputs.
- * @param A The system matrix.
- * @param B The input matrix.
- * @param Q The state cost matrix.
- * @param R_llt The LLT decomposition of the input cost matrix.
- * @return Solution to the DARE.
- */
-template <int States, int Inputs>
-Eigen::Matrix<double, States, States> DARE(
-    const Eigen::Matrix<double, States, States>& A,
-    const Eigen::Matrix<double, States, Inputs>& B,
-    const Eigen::Matrix<double, States, States>& Q,
-    const Eigen::LLT<Eigen::Matrix<double, Inputs, Inputs>>& R_llt) {
-  using StateMatrix = Eigen::Matrix<double, States, States>;
-
-  // Implements SDA algorithm on p. 5 of [1] (initial A, G, H are from (4)).
-  //
-  // [1] E. K.-W. Chu, H.-Y. Fan, W.-W. Lin & C.-S. Wang "Structure-Preserving
-  //     Algorithms for Periodic Discrete-Time Algebraic Riccati Equations",
-  //     International Journal of Control, 77:8, 767-788, 2004.
-  //     DOI: 10.1080/00207170410001714988
-
-  // A₀ = A
-  // G₀ = BR⁻¹Bᵀ
-  // H₀ = Q
-  StateMatrix A_k = A;
-  StateMatrix G_k = B * R_llt.solve(B.transpose());
-  StateMatrix H_k;
-  StateMatrix H_k1 = Q;
-
-  do {
-    H_k = H_k1;
-
-    // W = I + GₖHₖ
-    StateMatrix W = StateMatrix::Identity(H_k.rows(), H_k.cols()) + G_k * H_k;
-
-    auto W_solver = W.lu();
-
-    // Solve WV₁ = Aₖ for V₁
-    StateMatrix V_1 = W_solver.solve(A_k);
-
-    // Solve V₂Wᵀ = Gₖ for V₂
-    //
-    // We want to put V₂Wᵀ = Gₖ into Ax = b form so we can solve it more
-    // efficiently.
-    //
-    // V₂Wᵀ = Gₖ
-    // (V₂Wᵀ)ᵀ = Gₖᵀ
-    // WV₂ᵀ = Gₖᵀ
-    //
-    // The solution of Ax = b can be found via x = A.solve(b).
-    //
-    // V₂ᵀ = W.solve(Gₖᵀ)
-    // V₂ = W.solve(Gₖᵀ)ᵀ
-    StateMatrix V_2 = W_solver.solve(G_k.transpose()).transpose();
-
-    // Gₖ₊₁ = Gₖ + AₖV₂Aₖᵀ
-    // Hₖ₊₁ = Hₖ + V₁ᵀHₖAₖ
-    // Aₖ₊₁ = AₖV₁
-    G_k += A_k * V_2 * A_k.transpose();
-    H_k1 = H_k + V_1.transpose() * H_k * A_k;
-    A_k *= V_1;
-
-    // while |Hₖ₊₁ − Hₖ| > ε |Hₖ₊₁|
-  } while ((H_k1 - H_k).norm() > 1e-10 * H_k1.norm());
-
-  return H_k1;
-}
-
-}  // namespace detail
 
 /**
  * Computes the unique stabilizing solution X to the discrete-time algebraic
@@ -221,7 +200,60 @@ wpi::expected<Eigen::Matrix<double, States, States>, DAREError> DARE(
     }
   }
 
-  return detail::DARE<States, Inputs>(A, B, Q, R_llt);
+  using StateMatrix = Eigen::Matrix<double, States, States>;
+
+  // Implements SDA algorithm on p. 5 of [1] (initial A, G, H are from (4)).
+  //
+  // [1] E. K.-W. Chu, H.-Y. Fan, W.-W. Lin & C.-S. Wang "Structure-Preserving
+  //     Algorithms for Periodic Discrete-Time Algebraic Riccati Equations",
+  //     International Journal of Control, 77:8, 767-788, 2004.
+  //     DOI: 10.1080/00207170410001714988
+
+  // A₀ = A
+  // G₀ = BR⁻¹Bᵀ
+  // H₀ = Q
+  StateMatrix A_k = A;
+  StateMatrix G_k = B * R_llt.solve(B.transpose());
+  StateMatrix H_k;
+  StateMatrix H_k1 = Q;
+
+  do {
+    H_k = H_k1;
+
+    // W = I + GₖHₖ
+    StateMatrix W = StateMatrix::Identity(H_k.rows(), H_k.cols()) + G_k * H_k;
+
+    auto W_solver = W.lu();
+
+    // Solve WV₁ = Aₖ for V₁
+    StateMatrix V_1 = W_solver.solve(A_k);
+
+    // Solve V₂Wᵀ = Gₖ for V₂
+    //
+    // We want to put V₂Wᵀ = Gₖ into Ax = b form so we can solve it more
+    // efficiently.
+    //
+    // V₂Wᵀ = Gₖ
+    // (V₂Wᵀ)ᵀ = Gₖᵀ
+    // WV₂ᵀ = Gₖᵀ
+    //
+    // The solution of Ax = b can be found via x = A.solve(b).
+    //
+    // V₂ᵀ = W.solve(Gₖᵀ)
+    // V₂ = W.solve(Gₖᵀ)ᵀ
+    StateMatrix V_2 = W_solver.solve(G_k.transpose()).transpose();
+
+    // Gₖ₊₁ = Gₖ + AₖV₂Aₖᵀ
+    // Hₖ₊₁ = Hₖ + V₁ᵀHₖAₖ
+    // Aₖ₊₁ = AₖV₁
+    G_k += A_k * V_2 * A_k.transpose();
+    H_k1 = H_k + V_1.transpose() * H_k * A_k;
+    A_k *= V_1;
+
+    // while |Hₖ₊₁ − Hₖ| > ε |Hₖ₊₁|
+  } while ((H_k1 - H_k).norm() > 1e-10 * H_k1.norm());
+
+  return H_k1;
 }
 
 }  // namespace frc
