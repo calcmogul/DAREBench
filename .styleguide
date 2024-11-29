@@ -1,9 +1,8 @@
 cppHeaderFileInclude {
-  \.h$
+  \.hpp$
 }
 
 cppSrcFileInclude {
-  \.cc$
   \.cpp$
 }
 

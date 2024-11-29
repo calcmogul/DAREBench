@@ -3,8 +3,8 @@
 #include <Eigen/Core>
 #include <benchmark/benchmark.h>
 
-#include "InitArgs.h"
-#include "frc/DARE.h"
+#include "InitArgs.hpp"
+#include "frc/DARE.hpp"
 
 void DARE_WPIMath_NoPrecondChecks_Static(benchmark::State& state) {
   Eigen::Matrix<double, 5, 5> A;

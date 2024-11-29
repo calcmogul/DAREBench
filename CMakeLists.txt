@@ -32,7 +32,7 @@ if(NOT CMAKE_EXPORT_COMPILE_COMMANDS)
     set(CMAKE_EXPORT_COMPILE_COMMANDS "YES" CACHE STRING "" FORCE)
 endif()
 
-file(GLOB_RECURSE cpp_src src/*.cpp src/*.cc)
+file(GLOB_RECURSE cpp_src src/*.cpp)
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set_property(
         SOURCE ${cpp_src}

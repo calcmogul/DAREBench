@@ -3,8 +3,8 @@
 #include <Eigen/Core>
 #include <benchmark/benchmark.h>
 
-#include "InitArgs.h"
-#include "drake/math/discrete_algebraic_riccati_equation.h"
+#include "InitArgs.hpp"
+#include "drake/math/discrete_algebraic_riccati_equation.hpp"
 
 void DARE_Drake(benchmark::State& state) {
   Eigen::Matrix<double, 5, 5> A;

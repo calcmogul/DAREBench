@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <utility>
 
-#include "drake/common/drake_copyable.h"
+#include "drake/common/drake_copyable.hpp"
 
 namespace drake {
 

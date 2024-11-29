@@ -1,9 +1,9 @@
-#include "drake/systems/primitives/linear_system_internal.h"
+#include "drake/systems/primitives/linear_system_internal.hpp"
 
 #include <Eigen/Eigenvalues>
 #include <Eigen/QR>
 
-#include "drake/common/drake_assert.h"
+#include "drake/common/drake_assert.hpp"
 
 namespace drake {
 namespace systems {

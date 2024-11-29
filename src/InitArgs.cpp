@@ -1,6 +1,6 @@
 // Copyright (c) Tyler Veness
 
-#include "InitArgs.h"
+#include "InitArgs.hpp"
 
 #include <Eigen/Core>
 #include <unsupported/Eigen/MatrixFunctions>

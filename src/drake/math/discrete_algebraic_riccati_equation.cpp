@@ -1,15 +1,14 @@
-#include "drake/math/discrete_algebraic_riccati_equation.h"
+#include "drake/math/discrete_algebraic_riccati_equation.hpp"
 
 #include <Eigen/Cholesky>
 #include <Eigen/LU>
 
-#include "drake/common/drake_assert.h"
-#include "drake/common/drake_throw.h"
-#include "drake/common/is_approx_equal_abstol.h"
-#include "drake/systems/primitives/linear_system_internal.h"
+#include "drake/common/drake_assert.hpp"
+#include "drake/common/drake_throw.hpp"
+#include "drake/common/is_approx_equal_abstol.hpp"
+#include "drake/systems/primitives/linear_system_internal.hpp"
 
-namespace drake {
-namespace math {
+namespace drake::math {
 
 Eigen::MatrixXd DiscreteAlgebraicRiccatiEquation(
     const Eigen::Ref<const Eigen::MatrixXd>& A,
@@ -148,5 +147,4 @@ Eigen::MatrixXd DiscreteAlgebraicRiccatiEquation(
   return DiscreteAlgebraicRiccatiEquation(A_2, B, Q_2, R);
 }
 
-}  // namespace math
-}  // namespace drake
+}  // namespace drake::math

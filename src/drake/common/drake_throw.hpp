@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-#include "drake/common/drake_assert.h"
+#include "drake/common/drake_assert.hpp"
 
 /// @file
 /// Provides a convenient wrapper to throw an exception when a condition is

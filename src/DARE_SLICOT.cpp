@@ -3,8 +3,8 @@
 #include <Eigen/Core>
 #include <benchmark/benchmark.h>
 
-#include "InitArgs.h"
-#include "slicot/DARE.h"
+#include "InitArgs.hpp"
+#include "slicot/DARE.hpp"
 
 void DARE_SLICOT(benchmark::State& state) {
   Eigen::Matrix<double, 5, 5> A;
