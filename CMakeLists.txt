@@ -21,7 +21,11 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
 endif()
 
-project(DAREBench CXX Fortran)
+if(WIN32)
+    project(DAREBench CXX)
+else()
+    project(DAREBench CXX Fortran)
+endif()
 
 # Generate compile_commands.json by default
 if(NOT CMAKE_EXPORT_COMPILE_COMMANDS)
@@ -29,24 +33,33 @@ if(NOT CMAKE_EXPORT_COMPILE_COMMANDS)
 endif()
 
 file(GLOB_RECURSE cpp_src src/*.cpp src/*.cc)
-set_property(
-    SOURCE ${cpp_src}
-    PROPERTY
-        COMPILE_FLAGS
-            "-Wno-array-bounds -Wno-class-memaccess -Wno-dangling-reference -Wno-maybe-uninitialized -Wno-stringop-overflow"
-)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set_property(
+        SOURCE ${cpp_src}
+        PROPERTY
+            COMPILE_FLAGS
+                "-Wno-array-bounds -Wno-class-memaccess -Wno-dangling-reference -Wno-maybe-uninitialized -Wno-stringop-overflow"
+    )
+endif()
 
-file(GLOB_RECURSE fortran_src src/*.f)
-set_property(
-    SOURCE ${fortran_src}
-    PROPERTY
-        COMPILE_FLAGS
-            "-Wno-compare-reals -Wno-conversion -Wno-function-elimination -Wno-maybe-uninitialized -Wno-unused-dummy-argument"
-)
-
+if(NOT WIN32)
+    file(GLOB_RECURSE fortran_src src/*.f)
+    set_property(
+        SOURCE ${fortran_src}
+        PROPERTY
+            COMPILE_FLAGS
+                "-Wno-compare-reals -Wno-conversion -Wno-function-elimination -Wno-maybe-uninitialized -Wno-unused-dummy-argument"
+    )
+else()
+    list(REMOVE_ITEM cpp_src ${CMAKE_CURRENT_SOURCE_DIR}/src/DARE_SLICOT.cpp)
+endif()
 add_executable(DAREBench ${cpp_src} ${fortran_src})
 
-target_compile_options(DAREBench PRIVATE -Wall -Wextra -Werror -pedantic)
+if(NOT MSVC)
+    target_compile_options(DAREBench PRIVATE -Wall -Wextra -Werror -pedantic)
+else()
+    target_compile_options(DAREBench PRIVATE /MP /utf-8 /WX)
+endif()
 target_compile_definitions(DAREBench PRIVATE NDEBUG)
 target_compile_features(DAREBench PUBLIC cxx_std_20)
 target_include_directories(DAREBench PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -78,29 +91,31 @@ else()
 endif()
 target_link_libraries(DAREBench PRIVATE Eigen3::Eigen)
 
-# lapack dependency
-if(
-    CMAKE_CROSSCOMPILING
-    AND "${TOOLCHAIN_TRIPLE}" STREQUAL "arm-nilrt-linux-gnueabi"
-)
-    add_library(blas_athena SHARED IMPORTED)
-    set_target_properties(
-        blas_athena
-        PROPERTIES
-            IMPORTED_LOCATION
-                ${CMAKE_CURRENT_SOURCE_DIR}/${TOOLCHAIN_TRIPLE}/lib/libblas.so.3
+if(NOT WIN32)
+    # lapack dependency
+    if(
+        CMAKE_CROSSCOMPILING
+        AND "${TOOLCHAIN_TRIPLE}" STREQUAL "arm-nilrt-linux-gnueabi"
     )
-    add_library(lapack_athena SHARED IMPORTED)
-    set_target_properties(
-        lapack_athena
-        PROPERTIES
-            IMPORTED_LOCATION
-                ${CMAKE_CURRENT_SOURCE_DIR}/${TOOLCHAIN_TRIPLE}/lib/liblapack.so.3
-    )
-    target_link_libraries(DAREBench PRIVATE blas_athena lapack_athena)
-else()
-    include(FindLAPACK)
-    target_link_libraries(DAREBench PRIVATE LAPACK::LAPACK)
+        add_library(blas_athena SHARED IMPORTED)
+        set_target_properties(
+            blas_athena
+            PROPERTIES
+                IMPORTED_LOCATION
+                    ${CMAKE_CURRENT_SOURCE_DIR}/${TOOLCHAIN_TRIPLE}/lib/libblas.so.3
+        )
+        add_library(lapack_athena SHARED IMPORTED)
+        set_target_properties(
+            lapack_athena
+            PROPERTIES
+                IMPORTED_LOCATION
+                    ${CMAKE_CURRENT_SOURCE_DIR}/${TOOLCHAIN_TRIPLE}/lib/liblapack.so.3
+        )
+        target_link_libraries(DAREBench PRIVATE blas_athena lapack_athena)
+    else()
+        include(FindLAPACK)
+        target_link_libraries(DAREBench PRIVATE LAPACK::LAPACK)
+    endif()
 endif()
 
 # benchmark dependency

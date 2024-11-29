@@ -14,8 +14,10 @@ BENCHMARK(DARE_WPIMath_Static);
 void DARE_WPIMath_NoPrecondChecks_Static(benchmark::State& state);
 BENCHMARK(DARE_WPIMath_NoPrecondChecks_Static);
 
+#ifndef _WIN32
 void DARE_SLICOT(benchmark::State& state);
 BENCHMARK(DARE_SLICOT);
+#endif
 
 void DARE_Drake(benchmark::State& state);
 BENCHMARK(DARE_Drake);
