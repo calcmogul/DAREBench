@@ -63,10 +63,14 @@ option(USE_SYSTEM_BENCHMARK "Use system benchmark" OFF)
 
 # Eigen dependency
 if(NOT USE_SYSTEM_EIGEN)
+    set(EIGEN_BUILD_CMAKE_PACKAGE TRUE)
+    set(EIGEN_BUILD_BLAS OFF)
+    set(EIGEN_BUILD_LAPACK OFF)
     fetchcontent_declare(
         Eigen3
         GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-        GIT_TAG 3.4.0
+        # master on 2024-11-14
+        GIT_TAG 0fb2ed140d4fc0108553ecfb25f2d7fc1a9319a1
     )
     fetchcontent_makeavailable(Eigen3)
 else()
