@@ -97,7 +97,7 @@ class never_destroyed {
   const T& access() const { return *reinterpret_cast<const T*>(&storage_); }
 
  private:
-  typename std::aligned_storage<sizeof(T), alignof(T)>::type storage_;
+  typename std::aligned_storage_t<sizeof(T), alignof(T)> storage_;
 };
 
 }  // namespace drake

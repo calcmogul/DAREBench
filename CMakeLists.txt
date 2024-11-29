@@ -61,7 +61,7 @@ else()
     target_compile_options(DAREBench PRIVATE /MP /utf-8 /WX)
 endif()
 target_compile_definitions(DAREBench PRIVATE NDEBUG)
-target_compile_features(DAREBench PUBLIC cxx_std_20)
+target_compile_features(DAREBench PUBLIC cxx_std_23)
 target_include_directories(DAREBench PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # FIXME: Linker emits LTO type mismatch warning for sb02od_(), and benchmark
