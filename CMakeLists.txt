@@ -124,7 +124,7 @@ if(NOT USE_SYSTEM_BENCHMARK)
     fetchcontent_declare(
         benchmark
         GIT_REPOSITORY https://github.com/google/benchmark.git
-        GIT_TAG v1.9.0
+        GIT_TAG v1.9.2
         PATCH_COMMAND
             git apply ${CMAKE_CURRENT_SOURCE_DIR}/benchmark-athena-cpuinfo.patch
         UPDATE_DISCONNECTED TRUE
