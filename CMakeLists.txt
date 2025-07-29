@@ -79,13 +79,13 @@ if(NOT USE_SYSTEM_EIGEN)
     set(EIGEN_BUILD_CMAKE_PACKAGE TRUE)
     set(EIGEN_BUILD_BLAS OFF)
     set(EIGEN_BUILD_LAPACK OFF)
-    fetchcontent_declare(
+    FetchContent_Declare(
         Eigen3
         GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
         # master on 2024-11-14
         GIT_TAG 0fb2ed140d4fc0108553ecfb25f2d7fc1a9319a1
     )
-    fetchcontent_makeavailable(Eigen3)
+    FetchContent_MakeAvailable(Eigen3)
 else()
     find_package(Eigen3 CONFIG REQUIRED)
 endif()
@@ -121,7 +121,7 @@ endif()
 # benchmark dependency
 option(BENCHMARK_ENABLE_TESTING "Enable testing of the benchmark library." OFF)
 if(NOT USE_SYSTEM_BENCHMARK)
-    fetchcontent_declare(
+    FetchContent_Declare(
         benchmark
         GIT_REPOSITORY https://github.com/google/benchmark.git
         GIT_TAG v1.9.2
@@ -129,7 +129,7 @@ if(NOT USE_SYSTEM_BENCHMARK)
             git apply ${CMAKE_CURRENT_SOURCE_DIR}/benchmark-athena-cpuinfo.patch
         UPDATE_DISCONNECTED TRUE
     )
-    fetchcontent_makeavailable(benchmark)
+    FetchContent_MakeAvailable(benchmark)
 else()
     find_package(benchmark CONFIG REQUIRED)
 endif()
