@@ -1,11 +1,3 @@
-cppHeaderFileInclude {
-  \.hpp$
-}
-
-cppSrcFileInclude {
-  \.cpp$
-}
-
 modifiableFileExclude {
   arm-nilrt-linux-gnueabi/
   src/drake/
@@ -15,9 +7,4 @@ modifiableFileExclude {
 licenseUpdateExclude {
   src/drake/
   src/slicot/*.f
-}
-
-includeOtherLibs {
-  ^Eigen/
-  ^benchmark/
 }
