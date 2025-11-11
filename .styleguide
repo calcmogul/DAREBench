@@ -16,8 +16,3 @@ licenseUpdateExclude {
   src/drake/
   src/slicot/*.f
 }
-
-includeOtherLibs {
-  ^Eigen/
-  ^benchmark/
-}
