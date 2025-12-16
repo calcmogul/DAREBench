@@ -22,9 +22,9 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.13
+          python-version: 3.14
 
-      - run: pip3 install wpiformat==2025.77
+      - run: pip3 install wpiformat==2025.79
 
       - run: wpiformat
 
@@ -65,25 +65,25 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.13
+          python-version: 3.14
 
       - name: Install LAPACK
         run: |
           sudo apt-get update -q
           sudo apt-get install libblas-dev liblapack-dev
 
-      - name: Install LLVM 18
+      - name: Install LLVM 21
         run: |
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
-          sudo ./llvm.sh 18 all
-          sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 200
-          sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 200
+          sudo ./llvm.sh 21 all
+          sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-21 200
+          sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-21 200
           echo "CC=clang" >> $GITHUB_ENV
           echo "CXX=clang++" >> $GITHUB_ENV
           echo "CXXFLAGS=-stdlib=libc++" >> $GITHUB_ENV
 
-      - run: pip3 install wpiformat==2025.77
+      - run: pip3 install wpiformat==2025.79
 
       - name: Create compile_commands.json
         run: cmake -B build -S . -DCMAKE_EXPORT_COMPILE_COMMANDS=YES
