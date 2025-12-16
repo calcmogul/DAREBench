@@ -14,6 +14,6 @@ void DARE_WPIMath_Static(benchmark::State& state) {
   InitArgs(A, B, Q, R);
 
   for (auto _ : state) {
-    frc::DARE<5, 2>(A, B, Q, R);
+    static_cast<void>(frc::DARE<5, 2>(A, B, Q, R));
   }
 }

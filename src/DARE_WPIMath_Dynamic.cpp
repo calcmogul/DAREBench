@@ -14,6 +14,6 @@ void DARE_WPIMath_Dynamic(benchmark::State& state) {
   InitArgs(A, B, Q, R);
 
   for (auto _ : state) {
-    frc::DARE<Eigen::Dynamic, Eigen::Dynamic>(A, B, Q, R);
+    static_cast<void>(frc::DARE<Eigen::Dynamic, Eigen::Dynamic>(A, B, Q, R));
   }
 }
