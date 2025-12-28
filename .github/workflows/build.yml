@@ -34,7 +34,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     container: ${{ matrix.container }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install gfortran (macOS arm64)
         uses: fortran-lang/setup-fortran@v1
@@ -57,7 +57,7 @@ jobs:
       - run: cmake --build build --config RelWithDebInfo --parallel 4
       - run: cmake --install build --config RelWithDebInfo --prefix pkg
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.name }}
           path: pkg
