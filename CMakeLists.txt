@@ -44,11 +44,11 @@ target_compile_features(DAREBench PUBLIC cxx_std_23)
 target_include_directories(DAREBench PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # Options for using a package manager (e.g., vcpkg) for certain dependencies
-option(USE_SYSTEM_EIGEN "Use system eigen" OFF)
-option(USE_SYSTEM_BENCHMARK "Use system benchmark" OFF)
+option(DAREBENCH_USE_SYSTEM_EIGEN "Use system eigen" OFF)
+option(DAREBENCH_USE_SYSTEM_BENCHMARK "Use system benchmark" OFF)
 
 # Eigen dependency
-if(NOT USE_SYSTEM_EIGEN)
+if(NOT DAREBENCH_USE_SYSTEM_EIGEN)
     set(EIGEN_BUILD_CMAKE_PACKAGE TRUE)
     set(EIGEN_BUILD_BLAS OFF)
     set(EIGEN_BUILD_LAPACK OFF)
@@ -93,7 +93,7 @@ endif()
 
 # benchmark dependency
 option(BENCHMARK_ENABLE_TESTING "Enable testing of the benchmark library." OFF)
-if(NOT USE_SYSTEM_BENCHMARK)
+if(NOT DAREBENCH_USE_SYSTEM_BENCHMARK)
     FetchContent_Declare(
         benchmark
         GIT_REPOSITORY https://github.com/google/benchmark.git
