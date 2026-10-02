@@ -18,17 +18,13 @@ jobs:
             container:
             cmake-args:
           - name: Linux x86_64
-            os: ubuntu-24.04
+            os: ubuntu-26.04
             container:
             cmake-args:
           - name: macOS arm64
-            os: macos-15
+            os: macos-26
             container:
             cmake-args:
-          - name: roboRIO
-            os: ubuntu-24.04
-            container: wpilib/roborio-cross-ubuntu:2024-22.04
-            cmake-args: --toolchain /usr/local/toolchain-config.cmake
 
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
