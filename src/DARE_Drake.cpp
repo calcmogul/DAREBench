@@ -14,6 +14,7 @@ void DARE_Drake(benchmark::State& state) {
   InitArgs(A, B, Q, R);
 
   for (auto _ : state) {
-    drake::math::DiscreteAlgebraicRiccatiEquation(A, B, Q, R);
+    auto S = drake::math::DiscreteAlgebraicRiccatiEquation(A, B, Q, R);
+    benchmark::DoNotOptimize(S);
   }
 }

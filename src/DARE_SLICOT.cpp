@@ -14,6 +14,7 @@ void DARE_SLICOT(benchmark::State& state) {
   InitArgs(A, B, Q, R);
 
   for (auto _ : state) {
-    slicot::DARE<5, 2>(A, B, Q, R);
+    auto S = slicot::DARE<5, 2>(A, B, Q, R);
+    benchmark::DoNotOptimize(S);
   }
 }

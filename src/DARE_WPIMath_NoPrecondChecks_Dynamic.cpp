@@ -14,7 +14,7 @@ void DARE_WPIMath_NoPrecondChecks_Dynamic(benchmark::State& state) {
   InitArgs(A, B, Q, R);
 
   for (auto _ : state) {
-    static_cast<void>(
-        frc::DARE<Eigen::Dynamic, Eigen::Dynamic>(A, B, Q, R, false));
+    auto S = frc::DARE<Eigen::Dynamic, Eigen::Dynamic>(A, B, Q, R, false);
+    benchmark::DoNotOptimize(S);
   }
 }
