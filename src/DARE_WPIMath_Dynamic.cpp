@@ -4,7 +4,7 @@
 #include <benchmark/benchmark.h>
 
 #include "InitArgs.hpp"
-#include "frc/DARE.hpp"
+#include "wpi/math/linalg/DARE.hpp"
 
 void DARE_WPIMath_Dynamic(benchmark::State& state) {
   Eigen::Matrix<double, 5, 5> A;
@@ -14,7 +14,8 @@ void DARE_WPIMath_Dynamic(benchmark::State& state) {
   InitArgs(A, B, Q, R);
 
   for (auto _ : state) {
-    auto S = frc::DARE<Eigen::Dynamic, Eigen::Dynamic>(A, B, Q, R);
+    auto S =
+        wpi::math::DARE<Eigen::Dynamic, Eigen::Dynamic>(A, B, Q, R).value();
     benchmark::DoNotOptimize(S);
   }
 }

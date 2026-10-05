@@ -4,7 +4,7 @@
 #include <benchmark/benchmark.h>
 
 #include "InitArgs.hpp"
-#include "frc/DARE.hpp"
+#include "wpi/math/linalg/DARE.hpp"
 
 void DARE_WPIMath_NoPrecondChecks_Static(benchmark::State& state) {
   Eigen::Matrix<double, 5, 5> A;
@@ -14,7 +14,7 @@ void DARE_WPIMath_NoPrecondChecks_Static(benchmark::State& state) {
   InitArgs(A, B, Q, R);
 
   for (auto _ : state) {
-    auto S = frc::DARE<5, 2>(A, B, Q, R, false);
+    auto S = wpi::math::DARE<5, 2>(A, B, Q, R, false).value();
     benchmark::DoNotOptimize(S);
   }
 }
