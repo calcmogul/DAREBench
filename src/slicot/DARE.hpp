@@ -3,6 +3,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cstddef>
 #include <stdexcept>
 #include <string>
 
@@ -15,19 +16,18 @@ void sb02od_(
     // Mode parameters
     char* DICO, char* JOBB, char* FACT, char* UPLO, char* JOBL, char* SORT,
     // Input/output parameters
-    long int* N, long int* M, long int* P, double* A, long int* LDA, double* B,
-    long int* LDB, double* Q, long int* LDQ, double* R, long int* LDR,
-    double* L, long int* LDL, double* RCOND, double* X, long int* LDX,
-    double* ALFAR, double* ALFAI, double* BETA, double* S, long int* LDS,
-    double* T, long int* LDT, double* U, long int* LDU,
+    int* N, int* M, int* P, double* A, int* LDA, double* B, int* LDB, double* Q,
+    int* LDQ, double* R, int* LDR, double* L, int* LDL, double* RCOND,
+    double* X, int* LDX, double* ALFAR, double* ALFAI, double* BETA, double* S,
+    int* LDS, double* T, int* LDT, double* U, int* LDU,
     // Tolerances
     double* TOL,
     // Workspace
-    long int* IWORK, double* DWORK, long int* LDWORK, long int* BWORK,
+    int* IWORK, double* DWORK, int* LDWORK, int* BWORK,
     // Error indicator
-    long int* INFO,
+    int* INFO,
     // Hidden arguments for charlen
-    long int, long int, long int, long int, long int, long int);
+    size_t, size_t, size_t, size_t, size_t, size_t);
 
 }  // extern "C"
 
@@ -70,13 +70,13 @@ Eigen::Matrix<double, States, States> DARE(
   char SORT = 'S';
 
   // (input) State dimension
-  long int N = States;
+  int N = States;
 
   // (input) Number of system inputs
-  long int M = Inputs;
+  int M = Inputs;
 
   // (input) Number of system outputs (not used because FACT is 'N')
-  long int P = 0;
+  int P = 0;
 
   // (input) State matrix of the system A
   Eigen::Matrix<double, States, States> A_copy = A;
@@ -91,7 +91,7 @@ Eigen::Matrix<double, States, States> DARE(
   Eigen::Matrix<double, Inputs, Inputs> R_copy = R;
 
   // Leading dimension of array L (cross weighting matrix)
-  long int LDL = 1;
+  int LDL = 1;
 
   // (output) Estimate of reciprocal of condition number
   double RCOND = 0.0;
@@ -112,30 +112,30 @@ Eigen::Matrix<double, States, States> DARE(
   Eigen::Matrix<double, 2 * States + Inputs, 2 * States + Inputs> S;
 
   // Leading dimension of array S
-  long int LDS = 2 * States + Inputs;
+  int LDS = 2 * States + Inputs;
 
   // (output) Ordered upper triangular form T of the second matrix in the
   // reduced matrix pencil associated to the optimal problem
   Eigen::Matrix<double, 2 * States + Inputs, 2 * States> T;
 
   // Leading dimension of array T
-  long int LDT = 2 * States + Inputs;
+  int LDT = 2 * States + Inputs;
 
   // (output) Right transformation U which reduces the 2N-by-2N matrix pencil to
   // the ordered generalized real Schur form (S, T)
   Eigen::Matrix<double, 2 * States, 2 * States> U;
 
   // Leading dimension of array U
-  long int LDU = 2 * States;
+  int LDU = 2 * States;
 
   // Tolerance to be used to test for near singularity of original matrix pencil
   double TOL = 0.0;
 
   // Workspace
-  long int IWORK[std::max(2 * States, Inputs)];
+  int IWORK[std::max(2 * States, Inputs)];
   double DWORK[16 * States + 3 * Inputs + 16];
-  long int LDWORK = 16 * States + 3 * Inputs + 16;
-  long int BWORK[2 * States];
+  int LDWORK = 16 * States + 3 * Inputs + 16;
+  int BWORK[2 * States];
 
   // = 0:  successful exit;
   // < 0:  if INFO = -i, the i-th argument had an illegal
@@ -154,7 +154,7 @@ Eigen::Matrix<double, States, States> DARE(
   //       equal N;
   // = 6:  if a singular matrix was encountered during the
   //       computation of the solution matrix X.
-  long int INFO;
+  int INFO;
 
   sb02od_(&DICO, &JOBB, &FACT, &UPLO, &JOBL, &SORT, &N, &M, &P, A_copy.data(),
           &N, B_copy.data(), &N, Q_copy.data(), &N, R_copy.data(), &M, nullptr,
