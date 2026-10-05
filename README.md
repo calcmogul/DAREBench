@@ -67,25 +67,6 @@ DARE_SLICOT                                79.4 us         79.4 us         8789
 DARE_Drake                                 34.9 us         34.9 us        20074
 ```
 
-### roboRIO
-
-Ran via `LD_LIBRARY_PATH=. ./DAREBench --benchmark_time_unit=us`.
-
-```
-Running ./DAREBench
-Run on (2 X 666.66 MHz CPU s)
-Load Average: 0.43, 0.29, 0.16
--------------------------------------------------------------------------------
-Benchmark                                     Time             CPU   Iterations
--------------------------------------------------------------------------------
-DARE_WPIMath_Dynamic                        641 us          640 us         1092
-DARE_WPIMath_NoPrecondChecks_Dynamic        433 us          432 us         1618
-DARE_WPIMath_Static                         289 us          289 us         2426
-DARE_WPIMath_NoPrecondChecks_Static         188 us          188 us         3723
-DARE_SLICOT                                 827 us          826 us          848
-DARE_Drake                                 2331 us         2328 us          301
-```
-
 ## Licensing
 
 |Files           |Upstream Repo                             |License            |
