@@ -77,7 +77,6 @@ if(NOT DAREBENCH_USE_SYSTEM_BENCHMARK)
         benchmark
         GIT_REPOSITORY https://github.com/google/benchmark.git
         GIT_TAG v1.9.5
-        UPDATE_DISCONNECTED TRUE
     )
     FetchContent_MakeAvailable(benchmark)
 else()
