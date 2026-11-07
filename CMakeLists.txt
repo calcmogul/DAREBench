@@ -55,8 +55,8 @@ if(NOT DAREBENCH_USE_SYSTEM_EIGEN)
     FetchContent_Declare(
         Eigen3
         GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
-        # master on 2026-06-18
-        GIT_TAG 7bd98698c58e4f0d2f30c3fa8fc5adf6ec185df4
+        # master on 2026-11-07
+        GIT_TAG b153648217dab056e2d88eebd051c1c68b454a10
     )
     FetchContent_MakeAvailable(Eigen3)
 else()

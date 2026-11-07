@@ -22,4 +22,10 @@ BENCHMARK(DARE_SLICOT);
 void DARE_Drake(benchmark::State& state);
 BENCHMARK(DARE_Drake);
 
+void DARE_Eigen_Dynamic(benchmark::State& state);
+BENCHMARK(DARE_Eigen_Dynamic);
+
+void DARE_Eigen_Static(benchmark::State& state);
+BENCHMARK(DARE_Eigen_Static);
+
 BENCHMARK_MAIN();
